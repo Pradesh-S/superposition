@@ -72,7 +72,7 @@ jobs:
         permissions:
             contents: read
             packages: write
-        if: github.ref != 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         runs-on: ubuntu-latest
         steps:
             - name: Checkout repository
@@ -93,3 +93,8 @@ jobs:
                   docker buildx imagetools create --tag ghcr.io/${{ github.repository }}:${{ needs.tag-release.outputs.version }} \
                       ghcr.io/${{ github.repository }}:${{ needs.tag-release.outputs.version }}-linux-amd64 \
                       ghcr.io/${{ github.repository }}:${{ needs.tag-release.outputs.version }}-linux-arm64
+
+            - name: Package and push Helm chart to OCI registry
+              run: |
+                  helm package helm
+                  helm push "superposition-${{ needs.tag-release.outputs.version }}.tgz" "oci://ghcr.io/${{ github.repository_owner }}/helm-charts"
