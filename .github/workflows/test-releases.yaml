@@ -65,7 +65,7 @@ jobs:
               with:
                   push: true
                   context: .
-                  tags: ghcr.io/${{ github.repository }}:${{ needs.tag-release.outputs.version }}-${{ matrix.tag }}
+                  tags: ghcr.io/pradesh-s/superposition:${{ needs.tag-release.outputs.version }}-${{ matrix.tag }}
 
     create-manifest:
         needs: [tag-release, docker-build]
@@ -90,11 +90,11 @@ jobs:
 
             - name: Create manifest for multi-arch image
               run: |
-                  docker buildx imagetools create --tag ghcr.io/${{ github.repository }}:${{ needs.tag-release.outputs.version }} \
-                      ghcr.io/${{ github.repository }}:${{ needs.tag-release.outputs.version }}-linux-amd64 \
-                      ghcr.io/${{ github.repository }}:${{ needs.tag-release.outputs.version }}-linux-arm64
+                  docker buildx imagetools create --tag ghcr.io/pradesh-s/superposition:${{ needs.tag-release.outputs.version }} \
+                      ghcr.io/pradesh-s/superposition:${{ needs.tag-release.outputs.version }}-linux-amd64 \
+                      ghcr.io/pradesh-s/superposition:${{ needs.tag-release.outputs.version }}-linux-arm64
 
             - name: Package and push Helm chart to OCI registry
               run: |
                   helm package helm
-                  helm push "superposition-${{ needs.tag-release.outputs.version }}.tgz" "oci://ghcr.io/${{ github.repository_owner }}/helm-charts"
+                  helm push "superposition-${{ needs.tag-release.outputs.version }}.tgz" "oci://ghcr.io/pradesh-s/superposition/helm-charts"
